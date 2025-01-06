@@ -14,7 +14,7 @@ export function useChatContext<T>() {
   };
 
   const getContextToString = (): string => {
-    return JSON.stringify(chatContext.value);
+    return JSON.stringify(chatContext.value.slice(-2));
   };
 
   const toggleLoading = () => {
