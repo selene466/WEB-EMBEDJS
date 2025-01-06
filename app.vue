@@ -117,6 +117,10 @@ const allowedTypes = [
   "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
   "application/pdf", // .pdf
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
 ];
 
 const selectFile = () => {
@@ -129,8 +133,7 @@ const handleFileChange = (event: Event) => {
 
   if (file) {
     if (!allowedTypes.includes(file.type)) {
-      errorMessage.value =
-        "Invalid file type. Only DOCX, PPTX, XLSX, and PDF files are allowed.";
+      errorMessage.value = "Invalid file type.";
       selectedFile.value = null;
     } else {
       selectedFile.value = file;
@@ -485,7 +488,7 @@ watch(
                     ref="fileInput"
                     @change="handleFileChange"
                     style="display: none"
-                    accept=".docx, .pptx, .xlsx, .pdf"
+                    accept=".docx, .pptx, .xlsx, .pdf, .jpg, .jpeg, .png, .gif, .webp"
                   />
                   <p v-if="selectedFile">
                     Selected file: {{ selectedFile.name }}

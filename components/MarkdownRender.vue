@@ -39,8 +39,7 @@ const extractMermaidCode = (text: string): string[] => {
   return matches;
 };
 
-// ref
-const mermaidContainer = ref<HTMLDivElement | null>(null);
+const randomId = Math.random().toString(36).slice(2);
 
 // mounted
 onMounted(() => {
@@ -67,16 +66,22 @@ const props = defineProps({
 const parsedContent = computed(() => {
   let mermaidCodeBlocks = extractMermaidCode(props.content);
   let text = marked.parse(props.content);
+  setTimeout(() => {
+    let container = document.getElementById("mermaid-" + randomId);
 
-  if (mermaidCodeBlocks.length > 0 && mermaidContainer.value) {
-    mermaid.render("mermaidGraph", mermaidCodeBlocks[0]).then((res) => {
-      if (mermaidContainer.value) {
-        let divs = document.createElement("div");
-        divs.innerHTML = res.svg;
-        mermaidContainer.value.appendChild(divs);
-      }
-    });
-  }
+    if (mermaidCodeBlocks.length > 0 && container) {
+      mermaid
+        .render(
+          "mermaidGraph",
+          mermaidCodeBlocks[0].replace("|>", "|").replace("()", ""),
+        )
+        .then((res) => {
+          let divs = document.createElement("div");
+          divs.innerHTML = res.svg;
+          container.appendChild(divs);
+        });
+    }
+  }, 2000);
 
   return text.toString().replace("<table>", '<table class="table-auto">');
 });
@@ -84,7 +89,7 @@ const parsedContent = computed(() => {
 <template>
   <div v-html="parsedContent"></div>
   <div class="my-4">
-    <div ref="mermaidContainer" class="w-full"></div>
+    <div :id="'mermaid-' + randomId" class="w-full"></div>
   </div>
 </template>
 <style module lang="postcss">
